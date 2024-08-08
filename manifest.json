@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "webSummary",
+  "version": "1.0.0",
+  "action": { "default_popup": "index.html" },
+  "permissions": ["activeTab", "scripting", "webRequest"],
+  "content_scripts": [
+    {
+      "js": ["src/content.js"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "background": {
+    "service_worker": "src/background.js"
+  }
+}
