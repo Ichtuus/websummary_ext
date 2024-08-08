@@ -1,4 +1,4 @@
-# Body Content Extractor
+# Websummary extention
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
