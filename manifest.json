@@ -3,7 +3,7 @@
   "name": "webSummary",
   "version": "1.0.0",
   "action": { "default_popup": "index.html" },
-  "permissions": ["activeTab", "scripting", "webRequest"],
+  "permissions": ["activeTab", "scripting", "webRequest", "debugger"],
   "content_scripts": [
     {
       "js": ["src/content.js"],

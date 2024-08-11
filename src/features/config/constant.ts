@@ -3,6 +3,9 @@ export const recovery_mode = {
   ARTICLES: "articles",
 };
 
-export const chrome_actions = {
-    EXTRACT_CONTENT: 'extractContent'
+export const chrome_actions_list = {
+  EXTRACT_CONTENT: 'extractContent',
+  EXTRACT_CONTENT_FROM_ARTICLE: 'extractContentFromArticle',
+  EXTRACT_CONTENT_FROM_LINKEDIN: 'extractContentFromLinkedin'
+
 }
