@@ -11,7 +11,7 @@ const emits = defineEmits<{
 
 const mode = [
   { label: "Linkedin", value: recovery_mode.LINKEDIN },
-  { label: "Articles", value: recovery_mode.ARTICLES },
+  { label: "Articles", value: recovery_mode.ARTICLE },
 ];
 
 const updateMode = computed({

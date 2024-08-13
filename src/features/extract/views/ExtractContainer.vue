@@ -1,18 +1,13 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { inject } from "vue";
 import ModeSelector from "../components/ModeSelector.vue";
-import { recovery_mode } from "../config/constant";
 import WAlert from "../components/base/WAlert.vue";
 import { alert_mode_value } from "../components/base/constants";
 import { createCurrentTabEventChrome, currentAction } from "../actions/chrome";
-import UserPreferencePreview from "./UserPreferencePreview.vue";
 
-const mode = ref<string>(recovery_mode.LINKEDIN);
-const preview = ref<string>("");
-const isLoadContent = ref<boolean>(false);
-
+const { mode, preview, isLoadContent } = inject("extract_state");
+// : { mode: string; preview: string; isLoadContent: boolean }
 const getTextPage = async () => {
-  console.log("get text");
   const { response, isContentLoadedSuccess } =
     await createCurrentTabEventChrome(currentAction(mode.value) as string);
 
@@ -29,7 +24,7 @@ const getTextPage = async () => {
     @update-mode="(emitedValue: string) => mode = emitedValue"
   />
 
-  <p>
+  <div>
     <WAlert
       title="Extract succeed"
       text="You're content has extract, it's time to validate and send this to summarizer"
@@ -44,11 +39,11 @@ const getTextPage = async () => {
       :indeterminate="isLoadContent"
     ></v-progress-circular>
 
-    <UserPreferencePreview v-if="!isLoadContent" :preview="preview" />
-
-    <span v-if="!isLoadContent">You want to summarize {{ mode }} content</span>
-    <v-btn @click="getTextPage" size="x-small" :disabled="isLoadContent"
-      >Click here</v-btn
-    >
-  </p>
+    <div v-if="!isLoadContent && !preview">
+      <span>You want to summarize {{ mode }} content?</span>
+      <v-btn @click="getTextPage" size="x-small" :disabled="isLoadContent"
+        >Click here</v-btn
+      >
+    </div>
+  </div>
 </template>

@@ -23,16 +23,19 @@ export const createCurrentTabEventChrome = (
         activeTab.id,
         { action: extractmode },
         (response) => {
-          if (chrome.runtime.lastError) {
-            return reject(chrome.runtime.lastError);
-          }
+          //   if (chrome.runtime.lastError) {
+          //     console.log("error runtime error");
+          //     return reject(chrome.runtime.lastError);
+          //   }
 
           if (response && response.content) {
+            console.log("resp", response);
             resolve({
               response,
               isContentLoadedSuccess: true,
             });
           } else {
+            console.log("no response");
             resolve({
               response: null,
               isContentLoadedSuccess: false,
@@ -46,7 +49,7 @@ export const createCurrentTabEventChrome = (
 
 export const currentAction = (action: string) => {
   switch (action) {
-    case recovery_mode.ARTICLES:
+    case recovery_mode.ARTICLE:
       console.log("current action return article");
       return chrome_actions_list.EXTRACT_CONTENT_FROM_ARTICLE;
     case recovery_mode.LINKEDIN:
