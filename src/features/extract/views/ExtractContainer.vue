@@ -6,7 +6,7 @@ import { alert_mode_value } from "../components/base/constants";
 import { createCurrentTabEventChrome, currentAction } from "../actions/chrome";
 
 const { mode, preview, isLoadContent } = inject("extract_state");
-// : { mode: string; preview: string; isLoadContent: boolean }
+
 const getTextPage = async () => {
   const { response, isContentLoadedSuccess } =
     await createCurrentTabEventChrome(currentAction(mode.value) as string);

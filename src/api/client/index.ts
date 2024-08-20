@@ -23,6 +23,8 @@ class HttpClient {
     }
 
     const fullUrl = `${this.baseUrl}${url}`;
+
+    console.log("fullurl", fullUrl);
     const response = await fetch(fullUrl, requestOptions);
 
     return response.json();

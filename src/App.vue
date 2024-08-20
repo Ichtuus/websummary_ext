@@ -1,19 +1,40 @@
 <script setup lang="ts">
-import { provide, ref } from "vue";
+import { provide, reactive, ref } from "vue";
 import ExtractContainer from "./features/extract/views/ExtractContainer.vue";
 import { ILinkedinPreviewData } from "./features/preview/config/types";
 import { recovery_mode } from "./features/extract/config/constant";
 import PreviewContainer from "./features/preview/views/PreviewContainer.vue";
+import { apiClient } from "./api/client";
+import { ENDPOINTS } from "./api/client/endpoints";
 
 const mode = ref<string>(recovery_mode.LINKEDIN);
 const isLoadContent = ref<boolean>(false);
 const preview = ref<string | ILinkedinPreviewData[]>();
+
+const summarizeActionState = reactive({
+  isSummarizeLoading: false,
+  isSummarizeError: false,
+});
 
 provide("extract_state", {
   isLoadContent,
   preview,
   mode,
 });
+
+const summarizeAction = async () => {
+  console.log("summarize go !");
+  summarizeActionState.isSummarizeLoading = true;
+
+  try {
+    const summary = await apiClient.post(ENDPOINTS.vertex, preview.value);
+    summarizeActionState.isSummarizeLoading = false;
+    console.log("summary => ", summary);
+  } catch (error) {
+    summarizeActionState.isSummarizeLoading = false;
+    summarizeActionState.isSummarizeError = true;
+  }
+};
 </script>
 
 <template>
@@ -29,8 +50,19 @@ provide("extract_state", {
         :preview="preview as string | ILinkedinPreviewData[]"
       />
 
+      <v-progress-circular
+        v-if="summarizeActionState.isSummarizeLoading"
+        model-value="20"
+        :indeterminate="summarizeActionState.isSummarizeLoading"
+      ></v-progress-circular>
+
       <div v-if="!isLoadContent && preview" class="mt-8">
-        <v-btn color="secondary">sumarize</v-btn>
+        <v-btn
+          color="secondary"
+          :disabled="summarizeActionState.isSummarizeLoading"
+          @click="summarizeAction"
+          >sumarize</v-btn
+        >
       </div>
     </v-theme-provider>
   </main>
