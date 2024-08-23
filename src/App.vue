@@ -10,6 +10,8 @@ import { ENDPOINTS } from "./api/client/endpoints";
 const mode = ref<string>(recovery_mode.LINKEDIN);
 const isLoadContent = ref<boolean>(false);
 const preview = ref<string | ILinkedinPreviewData[]>();
+const previewTitle = ref<string>("");
+const previewUrl = ref<string>("");
 
 const summarizeActionState = reactive({
   isSummarizeLoading: false,
@@ -19,6 +21,8 @@ const summarizeActionState = reactive({
 provide("extract_state", {
   isLoadContent,
   preview,
+  previewTitle,
+  previewUrl,
   mode,
 });
 
@@ -27,7 +31,11 @@ const summarizeAction = async () => {
   summarizeActionState.isSummarizeLoading = true;
 
   try {
-    const summary = await apiClient.post(ENDPOINTS.vertex, preview.value);
+    const summary = await apiClient.post(ENDPOINTS.vertex, {
+      srctext: preview.value,
+      srctitle: previewTitle.value,
+      srcurl: previewUrl.value,
+    });
     summarizeActionState.isSummarizeLoading = false;
     console.log("summary => ", summary);
   } catch (error) {

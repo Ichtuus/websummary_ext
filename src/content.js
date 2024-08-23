@@ -27,8 +27,9 @@ async function extractContentFromLinkedin() {
 
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.action === chrome_actions_list.EXTRACT_CONTENT_FROM_ARTICLE) {
+    const title = document.getElementsByTagName("h1")[0].innerText;
     const content = extractContentFromArticle();
-    sendResponse({ content });
+    sendResponse({ content, title });
   }
 
   if (request.action === chrome_actions_list.EXTRACT_CONTENT_FROM_LINKEDIN) {

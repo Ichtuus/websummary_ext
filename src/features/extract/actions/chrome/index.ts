@@ -3,7 +3,8 @@ import { chrome_actions_list, recovery_mode } from "../../config/constant";
 export const createCurrentTabEventChrome = (
   extractmode: string
 ): Promise<{
-  response: { content: string } | null;
+  response: { content: string; title: string } | null;
+  url?: string;
   isContentLoadedSuccess: boolean;
 }> => {
   console.log("event chrome tab", extractmode);
@@ -29,13 +30,14 @@ export const createCurrentTabEventChrome = (
           //   }
 
           if (response && response.content) {
-            console.log("resp", response);
+            console.log("resp", activeTab.url);
             resolve({
               response,
+              url: activeTab.url,
               isContentLoadedSuccess: true,
             });
           } else {
-            console.log("no response");
+            console.log("Error on extract content");
             resolve({
               response: null,
               isContentLoadedSuccess: false,
