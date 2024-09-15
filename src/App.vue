@@ -16,6 +16,7 @@ const previewUrl = ref<string>("");
 const summarizeActionState = reactive({
   isSummarizeLoading: false,
   isSummarizeError: false,
+  isNotAuthorized: false,
 });
 
 provide("extract_state", {
@@ -38,10 +39,21 @@ const summarizeAction = async () => {
     });
     summarizeActionState.isSummarizeLoading = false;
     console.log("summary => ", summary);
+
+    if (summary.status === 401) {
+      summarizeActionState.isNotAuthorized = true;
+      return;
+    }
+
+    chrome.tabs.create({ url: "http://localhost:5173/dashboard/summaries" });
   } catch (error) {
     summarizeActionState.isSummarizeLoading = false;
     summarizeActionState.isSummarizeError = true;
   }
+};
+
+const redirectToAdmin = () => {
+  chrome.tabs.create({ url: "http://localhost:5173?redirectFrom=extension" });
 };
 </script>
 
@@ -49,28 +61,37 @@ const summarizeAction = async () => {
   <main>
     <v-theme-provider class="pa-10" theme="dark" with-background>
       <h1>Websummary</h1>
+      <div v-if="!summarizeActionState.isNotAuthorized">
+        <ExtractContainer />
 
-      <ExtractContainer />
+        <PreviewContainer
+          v-if="!isLoadContent && preview"
+          :source="mode as any"
+          :preview="preview as string | ILinkedinPreviewData[]"
+        />
 
-      <PreviewContainer
-        v-if="!isLoadContent && preview"
-        :source="mode as any"
-        :preview="preview as string | ILinkedinPreviewData[]"
-      />
+        <v-progress-circular
+          v-if="summarizeActionState.isSummarizeLoading"
+          model-value="20"
+          :indeterminate="summarizeActionState.isSummarizeLoading"
+        ></v-progress-circular>
 
-      <v-progress-circular
-        v-if="summarizeActionState.isSummarizeLoading"
-        model-value="20"
-        :indeterminate="summarizeActionState.isSummarizeLoading"
-      ></v-progress-circular>
+        <div v-if="!isLoadContent && preview" class="mt-8">
+          <v-btn
+            color="secondary"
+            :disabled="summarizeActionState.isSummarizeLoading"
+            @click="summarizeAction"
+            >sumarize</v-btn
+          >
+        </div>
+      </div>
 
-      <div v-if="!isLoadContent && preview" class="mt-8">
-        <v-btn
-          color="secondary"
-          :disabled="summarizeActionState.isSummarizeLoading"
-          @click="summarizeAction"
-          >sumarize</v-btn
-        >
+      <div v-else>
+        <p class="mb-5">
+          You are not authorized to access this application. Please go register
+          to application for using this extension.
+        </p>
+        <v-btn color="warning" @click="redirectToAdmin">Register</v-btn>
       </div>
     </v-theme-provider>
   </main>
