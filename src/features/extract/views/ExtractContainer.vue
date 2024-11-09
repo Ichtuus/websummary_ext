@@ -5,7 +5,7 @@ import WAlert from "../components/base/WAlert.vue";
 import { alert_mode_value } from "../components/base/constants";
 import { createCurrentTabEventChrome, currentAction } from "../actions/chrome";
 
-const { mode, preview, previewTitle, previewUrl, isLoadContent } =
+const { mode, preview, previewTitle, previewUrl, isLoadContent }: any =
   inject("extract_state");
 
 const getTextPage = async () => {

@@ -40,7 +40,7 @@ const summarizeAction = async () => {
     summarizeActionState.isSummarizeLoading = false;
     console.log("summary => ", summary);
 
-    if (summary.status === 401) {
+    if ((summary as any).status === 401) {
       summarizeActionState.isNotAuthorized = true;
       return;
     }
